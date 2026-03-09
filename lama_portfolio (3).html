@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lama Shayya's Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00ff41;
+    --bg: #0d1f10;
+    --card-bg: rgba(0,40,15,0.92);
+    --border: rgba(0,255,65,0.45);
+    --text: #d4ffe0;
+    --muted: #6a9970;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
+
+  #matrix-canvas { position: fixed; top:0; left:0; width:100%; height:100%; z-index:0; opacity:0.55; }
+
+  header {
+    position: fixed; top:0; left:0; right:0; z-index:100;
+    background: rgba(8,20,10,0.96); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem; height: 56px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .header-title { font-family:'Share Tech Mono',monospace; font-size:1rem; color:var(--green); letter-spacing:.12em; }
+  .header-icons { display:flex; gap:1.2rem; align-items:center; }
+  .icon-btn { background:none; border:none; cursor:pointer; color:var(--green); display:flex; align-items:center; padding:4px; transition:opacity .2s; }
+  .icon-btn:hover { opacity:.7; }
+  .icon-btn svg { width:22px; height:22px; stroke:var(--green); fill:none; stroke-width:2; }
+
+  #nav-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.65); z-index:200; }
+  #nav-overlay.open { display:block; }
+  #nav-drawer {
+    position:fixed; top:0; left:-300px; width:300px; height:100%;
+    background:rgba(0,15,5,.98); border-right:1px solid var(--border);
+    z-index:201; transition:left .3s ease; padding:70px 2rem 2rem;
+  }
+  #nav-drawer.open { left:0; }
+  #nav-drawer a {
+    display:block; padding:.8rem 0;
+    font-family:'Share Tech Mono',monospace; font-size:.9rem; color:var(--green);
+    text-decoration:none; border-bottom:1px solid rgba(0,255,65,.1);
+    letter-spacing:.08em; transition:padding-left .2s,color .2s;
+  }
+  #nav-drawer a:hover { padding-left:.6rem; color:#fff; }
+
+  #search-bar { display:none; position:fixed; top:56px; left:0; right:0; z-index:99; background:rgba(0,12,5,.98); border-bottom:1px solid var(--border); padding:.75rem 2rem; }
+  #search-bar.open { display:block; }
+  #search-input { width:100%; background:transparent; border:none; border-bottom:1px solid var(--green); color:var(--green); font-family:'Share Tech Mono',monospace; font-size:1rem; outline:none; padding:.3rem 0; caret-color:var(--green); }
+  #search-input::placeholder { color:var(--muted); }
+
+  main { position:relative; z-index:1; padding-top:56px; }
+
+  #hero { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:2rem; position:relative; }
+  .hero-box {
+    border:2px solid var(--green); padding:2.5rem 3.5rem; position:relative;
+    background:rgba(0,15,5,.65); backdrop-filter:blur(6px);
+    box-shadow:0 0 60px rgba(0,255,65,.12),inset 0 0 40px rgba(0,255,65,.03);
+  }
+  .hero-box::before,.hero-box::after { content:''; position:absolute; width:22px; height:22px; border-color:var(--green); border-style:solid; }
+  .hero-box::before { top:-2px; left:-2px; border-width:3px 0 0 3px; }
+  .hero-box::after  { bottom:-2px; right:-2px; border-width:0 3px 3px 0; }
+  .hero-name { font-family:'Orbitron',sans-serif; font-size:clamp(2.4rem,7vw,5.2rem); font-weight:900; color:#fff; letter-spacing:.05em; text-shadow:0 0 40px rgba(0,255,65,.45); line-height:1.1; }
+  .hero-role { margin-top:1.1rem; font-family:'Share Tech Mono',monospace; font-size:.95rem; color:var(--green); letter-spacing:.18em; }
+  .hero-role span { display:inline-block; overflow:hidden; white-space:nowrap; border-right:2px solid var(--green); animation:typing 3.5s steps(45) .5s both,blink .7s step-end infinite; }
+  @keyframes typing { from{width:0} to{width:100%} }
+  @keyframes blink { 50%{border-color:transparent} }
+  .scroll-hint { position:absolute; bottom:2rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:.4rem; font-family:'Share Tech Mono',monospace; font-size:.68rem; color:var(--muted); letter-spacing:.15em; animation:pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+  .scroll-hint svg { width:18px; height:18px; stroke:var(--muted); fill:none; }
+
+  section { position:relative; z-index:1; padding:5rem 2rem; max-width:1150px; margin:0 auto; }
+  .section-label { font-family:'Share Tech Mono',monospace; font-size:.7rem; letter-spacing:.3em; color:var(--green); margin-bottom:.4rem; }
+  .section-title { font-family:'Orbitron',sans-serif; font-size:clamp(1.4rem,3vw,2rem); font-weight:700; color:#fff; margin-bottom:2.5rem; position:relative; display:inline-block; }
+  .section-title::after { content:''; position:absolute; bottom:-8px; left:0; width:100%; height:1px; background:linear-gradient(90deg,var(--green),transparent); }
+
+  .sub-label { font-family:'Share Tech Mono',monospace; font-size:.72rem; letter-spacing:.28em; color:var(--green); margin:2rem 0 1.2rem; }
+
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+  .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+  .grid-4 { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.2rem; }
+  @media(max-width:750px){ .grid-2,.grid-3{grid-template-columns:1fr;} }
+
+  .card { background:var(--card-bg); border:1px solid var(--border); padding:1.8rem; transition:border-color .3s,box-shadow .3s; }
+  .card:hover { border-color:var(--green); box-shadow:0 0 20px rgba(0,255,65,.08); }
+  .card-label { font-family:'Share Tech Mono',monospace; font-size:.68rem; letter-spacing:.28em; color:var(--green); margin-bottom:1rem; }
+  .card h3 { font-size:1.1rem; font-weight:700; color:#fff; margin-bottom:.3rem; }
+  .card .sub { font-family:'Share Tech Mono',monospace; font-size:.8rem; color:var(--muted); margin-bottom:.85rem; }
+  .card p { font-size:1rem; line-height:1.75; color:var(--text); }
+
+  .contact-row { display:flex; align-items:flex-start; gap:.75rem; margin-bottom:.9rem; font-family:'Share Tech Mono',monospace; font-size:.85rem; color:var(--text); }
+  .contact-row svg { width:15px; height:15px; stroke:var(--green); fill:none; flex-shrink:0; margin-top:2px; }
+  .contact-row a { color:var(--green); text-decoration:none; word-break:break-all; }
+  .contact-row a:hover { text-decoration:underline; }
+
+  .divider { height:1px; background:linear-gradient(90deg,transparent,var(--border),transparent); margin:.8rem 0 1.2rem; }
+
+  .timeline { position:relative; padding-left:2rem; }
+  .timeline::before { content:''; position:absolute; top:0; left:6px; width:1px; height:100%; background:linear-gradient(to bottom,var(--green),transparent); }
+  .tl-item { position:relative; margin-bottom:2rem; background:var(--card-bg); border:1px solid var(--border); padding:1.5rem 1.8rem; transition:border-color .3s,box-shadow .3s; }
+  .tl-item:hover { border-color:var(--green); box-shadow:0 0 20px rgba(0,255,65,.07); }
+  .tl-item::before { content:''; position:absolute; left:-2.2rem; top:1.6rem; width:11px; height:11px; background:var(--green); border-radius:50%; box-shadow:0 0 12px var(--green); }
+  .tl-period { font-family:'Share Tech Mono',monospace; font-size:.75rem; color:var(--green); letter-spacing:.1em; margin-bottom:.3rem; }
+  .tl-role { font-size:1.2rem; font-weight:700; color:#fff; margin-bottom:.15rem; }
+  .tl-company { font-family:'Share Tech Mono',monospace; font-size:.82rem; color:var(--muted); margin-bottom:.9rem; }
+  .tl-bullets { list-style:none; }
+  .tl-bullets li { padding:.22rem 0 .22rem 1.3rem; position:relative; font-size:1rem; color:var(--text); line-height:1.6; }
+  .tl-bullets li::before { content:'▹'; position:absolute; left:0; color:var(--green); font-size:.78rem; top:.3rem; }
+
+  .skill-card { background:var(--card-bg); border:1px solid var(--border); padding:1.5rem; transition:border-color .3s,transform .2s; }
+  .skill-card:hover { border-color:var(--green); transform:translateY(-4px); }
+  .skill-card-title { font-family:'Orbitron',sans-serif; font-size:.72rem; color:var(--green); letter-spacing:.2em; margin-bottom:1rem; }
+  .skill-tag { display:inline-block; border:1px solid rgba(0,255,65,.35); color:var(--text); font-family:'Share Tech Mono',monospace; font-size:.78rem; padding:.22rem .6rem; margin:.2rem .15rem; background:rgba(0,255,65,.04); transition:background .2s,color .2s; }
+  .skill-tag:hover { background:rgba(0,255,65,.14); color:#fff; }
+
+  .project-card { background:var(--card-bg); border:1px solid var(--border); padding:1.8rem; position:relative; overflow:hidden; transition:border-color .3s,box-shadow .3s; }
+  .project-card::before { content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:var(--green); transform:scaleY(0); transform-origin:top; transition:transform .3s; }
+  .project-card:hover { border-color:var(--green); box-shadow:0 0 25px rgba(0,255,65,.1); }
+  .project-card:hover::before { transform:scaleY(1); }
+  .project-num { font-family:'Share Tech Mono',monospace; font-size:.7rem; color:var(--muted); letter-spacing:.2em; margin-bottom:.5rem; }
+  .project-title { font-family:'Orbitron',sans-serif; font-size:1rem; font-weight:700; color:#fff; margin-bottom:.8rem; line-height:1.3; }
+  .project-desc { font-size:.97rem; color:var(--text); line-height:1.75; margin-bottom:.7rem; }
+  .project-supervisor { font-family:'Share Tech Mono',monospace; font-size:.78rem; color:var(--muted); margin-bottom:.9rem; }
+  .project-tags { display:flex; flex-wrap:wrap; gap:.4rem; }
+  .project-tag { font-family:'Share Tech Mono',monospace; font-size:.72rem; color:var(--green); border:1px solid rgba(0,255,65,.3); padding:.18rem .55rem; background:rgba(0,255,65,.05); }
+
+  .cert-card { background:var(--card-bg); border:1px solid var(--border); padding:1.8rem 2rem; display:flex; align-items:flex-start; gap:1.5rem; transition:border-color .3s; }
+  .cert-card:hover { border-color:var(--green); }
+  .cert-icon { font-size:2.4rem; flex-shrink:0; }
+  .cert-title { font-size:1.1rem; font-weight:700; color:#fff; margin-bottom:.3rem; }
+  .cert-name { font-size:1rem; color:var(--text); margin-bottom:.4rem; }
+  .cert-org { font-family:'Share Tech Mono',monospace; font-size:.82rem; color:var(--green); margin-bottom:.6rem; }
+  .cert-details { font-size:.97rem; color:var(--text); line-height:1.7; }
+
+  .cover-letter { background:var(--card-bg); border:1px solid var(--border); padding:2.8rem; font-size:1.02rem; line-height:1.95; color:var(--text); position:relative; }
+  .cover-letter::before { content:'"'; position:absolute; top:.8rem; left:1.5rem; font-size:5rem; color:rgba(0,255,65,.07); font-family:Georgia,serif; line-height:1; }
+  .cover-letter p { margin-bottom:1.1rem; }
+  .cover-letter .sig { color:var(--green); font-family:'Share Tech Mono',monospace; font-size:.9rem; margin-top:1.5rem; line-height:1.8; border-top:1px solid rgba(0,255,65,.2); padding-top:1rem; }
+
+  .reveal { opacity:0; transform:translateY(28px); transition:opacity .7s ease,transform .7s ease; }
+  .reveal.visible { opacity:1; transform:none; }
+
+  body::after { content:''; position:fixed; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.025) 2px,rgba(0,0,0,.025) 4px); pointer-events:none; z-index:999; }
+
+  footer { position:relative; z-index:1; text-align:center; padding:3rem 2rem; border-top:1px solid var(--border); font-family:'Share Tech Mono',monospace; font-size:.78rem; color:var(--muted); letter-spacing:.1em; }
+  footer span { color:var(--green); }
+  footer a { color:var(--green); text-decoration:none; }
+</style>
+</head>
+<body>
+
+<canvas id="matrix-canvas"></canvas>
+
+<header>
+  <span class="header-title">Lama Shayya's Portfolio</span>
+  <div class="header-icons">
+    <button class="icon-btn" id="menu-btn" aria-label="Menu">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <button class="icon-btn" id="search-btn" aria-label="Search">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+  </div>
+</header>
+
+<div id="nav-overlay"></div>
+<nav id="nav-drawer">
+  <a href="#about">// 01 — ABOUT</a>
+  <a href="#cv">// 02 — CV</a>
+  <a href="#experience">// 03 — EXPERIENCE</a>
+  <a href="#education">// 04 — EDUCATION</a>
+  <a href="#skills">// 05 — SKILLS</a>
+  <a href="#projects">// 06 — PROJECTS</a>
+  <a href="#certifications">// 07 — CERTIFICATIONS</a>
+  <a href="#cover">// 08 — COVER LETTER</a>
+</nav>
+
+<div id="search-bar">
+  <input id="search-input" type="text" placeholder="// search portfolio..." autocomplete="off">
+</div>
+
+<main>
+
+  <!-- HERO -->
+  <div id="hero">
+    <div class="hero-box">
+      <div class="hero-name">Lama Shayya</div>
+      <div class="hero-role"><span>Full-Stack Developer &amp; Business Computing Student</span></div>
+    </div>
+    <div class="scroll-hint">
+      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      SCROLL
+    </div>
+  </div>
+
+  <!-- 01 ABOUT -->
+  <section id="about">
+    <div class="section-label">// 01</div>
+    <h2 class="section-title">ABOUT ME</h2>
+    <div class="grid-2 reveal">
+      <div class="card">
+        <div class="card-label">SUMMARY</div>
+        <p>Motivated Business Computer student seeking a software development internship, with a strong analytical mindset and a growing specialization in <strong style="color:#fff">full-stack web development</strong>.</p>
+        <br>
+        <p>Possesses solid knowledge of frontend technologies (HTML, CSS, JavaScript) and backend development using <strong style="color:#fff">C# and ASP.NET MVC/Web API</strong>. Experienced in designing RESTful APIs, working with SQL databases, and applying object-oriented programming principles.</p>
+        <br>
+        <p>Proactive learner, detail-oriented, and eager to contribute to real-world, business-driven software solutions.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">CONTACT</div>
+        <div class="contact-row">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.9 10.79 19.79 19.79 0 01.81 2.18 2 2 0 012.8.01h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.29 6.29l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          +961 81831308
+        </div>
+        <div class="contact-row">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          shla35358@gmail.com
+        </div>
+        <div class="contact-row">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Sawfar, Lebanon
+        </div>
+        <div class="contact-row">
+          <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          <a href="https://www.linkedin.com/in/lama-shayya-7587b83a0" target="_blank">linkedin.com/in/lama-shayya-7587b83a0</a>
+        </div>
+        <div class="divider"></div>
+        <div class="card-label">LANGUAGES</div>
+        <div class="contact-row">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          <span><strong style="color:#fff">Arabic</strong> — Native</span>
+        </div>
+        <div class="contact-row">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          <span><strong style="color:#fff">English</strong> — Very Good</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 CV -->
+  <section id="cv">
+    <div class="section-label">// 02</div>
+    <h2 class="section-title">CURRICULUM VITAE</h2>
+
+    <p class="sub-label">▸ EDUCATION</p>
+    <div class="grid-2 reveal" style="margin-bottom:2.8rem;">
+      <div class="card">
+        <div class="card-label">BACHELOR DEGREE · 2024 – 2027</div>
+        <h3>Bachelor of Business Computing</h3>
+        <div class="sub">Faculty of Technology (LU) – Branch 2, Abey &nbsp;|&nbsp; Expected: 2027</div>
+        <p>Specializing in full-stack web development. Core subjects include Object-Oriented Programming, Data Structures, Database Design, Web Development (Frontend &amp; Backend), and Software Engineering principles. Currently completing a practical internship at Vanrise Company, Beirut (Feb 2026–present).</p>
+      </div>
+      <div class="card">
+        <div class="card-label">HIGH SCHOOL · 2021 – 2024</div>
+        <h3>High School Diploma</h3>
+        <div class="sub">Sawfar Secondary School · Sawfar, Lebanon</div>
+        <p>Completed Lebanese secondary education with a solid academic foundation. This background prepared the path towards a focused university degree in Business Computing at Lebanese University.</p>
+      </div>
+    </div>
+
+    <p class="sub-label">▸ WORK EXPERIENCE</p>
+    <div class="grid-3 reveal" style="margin-bottom:2.8rem;">
+      <div class="card">
+        <div class="card-label">Feb 2026 – Present</div>
+        <h3>Web Development Intern</h3>
+        <div class="sub">Vanrise Company · Beirut, Lebanon · Online</div>
+        <ul class="tl-bullets">
+          <li>Develop RESTful APIs using ASP.NET and C#</li>
+          <li>Design and optimize SQL Server databases</li>
+          <li>Build AngularJS components</li>
+          <li>Resolve front-end performance issues</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-label">2023 – 2025</div>
+        <h3>Participant / Trainee</h3>
+        <div class="sub">SHE LEADS Company · Beirut, Lebanon</div>
+        <ul class="tl-bullets">
+          <li>Attended professional development workshops</li>
+          <li>Improved communication and teamwork skills</li>
+          <li>Gained confidence in professional interaction</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-label">2022 – 2024</div>
+        <h3>Customer Service Assistant</h3>
+        <div class="sub">Sawfar MiniMarket · Sawfar, Lebanon</div>
+        <ul class="tl-bullets">
+          <li>Managed daily customer interactions</li>
+          <li>Assisted with sales &amp; product organization</li>
+          <li>Communicated with customers and suppliers</li>
+          <li>Developed accuracy &amp; problem-solving skills</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="sub-label">▸ TECHNICAL SKILLS</p>
+    <div class="grid-4 reveal" style="margin-bottom:2.8rem;">
+      <div class="card">
+        <div class="card-label">FRONTEND</div>
+        <span class="skill-tag">HTML5</span><span class="skill-tag">CSS3</span><span class="skill-tag">JavaScript</span><span class="skill-tag">Bootstrap</span><span class="skill-tag">AngularJS</span><span class="skill-tag">Responsive Design</span><span class="skill-tag">DOM Manipulation</span>
+      </div>
+      <div class="card">
+        <div class="card-label">BACKEND</div>
+        <span class="skill-tag">C#</span><span class="skill-tag">ASP.NET MVC</span><span class="skill-tag">ASP.NET Web API</span><span class="skill-tag">RESTful APIs</span><span class="skill-tag">OOP</span><span class="skill-tag">Console Applications</span>
+      </div>
+      <div class="card">
+        <div class="card-label">DATABASE</div>
+        <span class="skill-tag">SQL Server</span><span class="skill-tag">MySQL</span><span class="skill-tag">CRUD Operations</span><span class="skill-tag">Basic Queries</span><span class="skill-tag">Database Design</span>
+      </div>
+      <div class="card">
+        <div class="card-label">TOOLS &amp; OS</div>
+        <span class="skill-tag">GitHub</span><span class="skill-tag">Visual Studio Code</span><span class="skill-tag">Windows</span><span class="skill-tag">Linux (CLI)</span>
+      </div>
+    </div>
+
+    <p class="sub-label">▸ SOFT SKILLS, LANGUAGES &amp; CERTIFICATION</p>
+    <div class="grid-3 reveal">
+      <div class="card">
+        <div class="card-label">SOFT SKILLS</div>
+        <span class="skill-tag">Teamwork</span><span class="skill-tag">Communication</span><span class="skill-tag">Adaptability</span><span class="skill-tag">Time Management</span><span class="skill-tag">Attention to Detail</span><span class="skill-tag">Hard Worker</span><span class="skill-tag">Problem Solving</span><span class="skill-tag">Responsibility</span>
+      </div>
+      <div class="card">
+        <div class="card-label">LANGUAGES</div>
+        <p><strong style="color:#fff">Arabic</strong> — Native<br><br><strong style="color:#fff">English</strong> — Very Good</p>
+      </div>
+      <div class="card">
+        <div class="card-label">CERTIFICATION</div>
+        <h3 style="font-size:.98rem;">Certificate of Attendance &amp; Participation</h3>
+        <div class="sub" style="margin-top:.4rem;">Introduction to Ethical Hacking</div>
+        <p style="font-size:.92rem;">Ming of Ethical Hackers – Semicolon Security<br>2023 – 2025</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 EXPERIENCE -->
+  <section id="experience">
+    <div class="section-label">// 03</div>
+    <h2 class="section-title">WORK EXPERIENCE</h2>
+    <div class="timeline reveal">
+      <div class="tl-item">
+        <div class="tl-period">Feb 2026 — Present</div>
+        <div class="tl-role">Online Web Development Intern</div>
+        <div class="tl-company">Vanrise Company · Beirut, Lebanon · Remote</div>
+        <ul class="tl-bullets">
+          <li>Develop RESTful APIs using ASP.NET and C#</li>
+          <li>Design and optimize SQL Server databases for performance and reliability</li>
+          <li>Build AngularJS components and resolve front-end performance issues</li>
+          <li>Collaborate with team members in a professional online development environment</li>
+        </ul>
+      </div>
+      <div class="tl-item">
+        <div class="tl-period">2023 — 2025</div>
+        <div class="tl-role">Participant / Trainee</div>
+        <div class="tl-company">SHE LEADS Company · Beirut, Lebanon</div>
+        <ul class="tl-bullets">
+          <li>Attended professional development workshops focused on career and personal growth</li>
+          <li>Improved communication, teamwork, and collaboration skills</li>
+          <li>Gained confidence in professional interaction and workplace dynamics</li>
+        </ul>
+      </div>
+      <div class="tl-item">
+        <div class="tl-period">2022 — 2024</div>
+        <div class="tl-role">Customer Service Assistant</div>
+        <div class="tl-company">Sawfar MiniMarket · Sawfar, Lebanon</div>
+        <ul class="tl-bullets">
+          <li>Managed daily customer interactions and provided efficient, friendly service</li>
+          <li>Assisted with sales transactions and organized product inventory</li>
+          <li>Communicated professionally with both customers and suppliers</li>
+          <li>Developed strong responsibility, accuracy, and problem-solving skills in a fast-paced environment</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 EDUCATION -->
+  <section id="education">
+    <div class="section-label">// 04</div>
+    <h2 class="section-title">EDUCATION</h2>
+    <div class="timeline reveal">
+      <div class="tl-item">
+        <div class="tl-period">2024 — Expected Graduation: 2027</div>
+        <div class="tl-role">Bachelor of Business Computing</div>
+        <div class="tl-company">Lebanese University · Faculty of Technology · Branch 2, Abey</div>
+        <ul class="tl-bullets">
+          <li>Specialization in full-stack web development</li>
+          <li>Core subjects: Object-Oriented Programming, Data Structures, Database Design</li>
+          <li>Web technologies: HTML/CSS/JS, C#, ASP.NET MVC/Web API, SQL Server</li>
+          <li>Practical internship at Vanrise Company, Beirut (Feb 2026 – present)</li>
+        </ul>
+      </div>
+      <div class="tl-item">
+        <div class="tl-period">2021 — 2024</div>
+        <div class="tl-role">High School Diploma</div>
+        <div class="tl-company">Sawfar Secondary School · Sawfar, Lebanon</div>
+        <ul class="tl-bullets">
+          <li>Completed Lebanese secondary education curriculum</li>
+          <li>Built strong analytical and academic foundations ahead of university studies</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 SKILLS -->
+  <section id="skills">
+    <div class="section-label">// 05</div>
+    <h2 class="section-title">SKILLS</h2>
+    <div class="grid-4 reveal">
+      <div class="skill-card">
+        <div class="skill-card-title">FRONTEND</div>
+        <span class="skill-tag">HTML5</span><span class="skill-tag">CSS3</span><span class="skill-tag">JavaScript</span><span class="skill-tag">Bootstrap</span><span class="skill-tag">AngularJS</span><span class="skill-tag">Responsive Design</span><span class="skill-tag">Page Layout</span><span class="skill-tag">DOM Manipulation</span><span class="skill-tag">UI Components</span>
+      </div>
+      <div class="skill-card">
+        <div class="skill-card-title">BACKEND</div>
+        <span class="skill-tag">C#</span><span class="skill-tag">ASP.NET MVC</span><span class="skill-tag">ASP.NET Web API</span><span class="skill-tag">RESTful APIs</span><span class="skill-tag">OOP Concepts</span><span class="skill-tag">Console Applications</span>
+      </div>
+      <div class="skill-card">
+        <div class="skill-card-title">DATABASE</div>
+        <span class="skill-tag">SQL Server</span><span class="skill-tag">MySQL</span><span class="skill-tag">CRUD Operations</span><span class="skill-tag">Basic Queries</span><span class="skill-tag">Database Design</span><span class="skill-tag">Query Optimization</span>
+      </div>
+      <div class="skill-card">
+        <div class="skill-card-title">TOOLS &amp; OS</div>
+        <span class="skill-tag">GitHub</span><span class="skill-tag">Visual Studio Code</span><span class="skill-tag">Windows</span><span class="skill-tag">Linux (CLI)</span><span class="skill-tag">Command-Line Usage</span>
+      </div>
+      <div class="skill-card" style="grid-column:1/-1;">
+        <div class="skill-card-title">SOFT SKILLS</div>
+        <span class="skill-tag">Teamwork</span><span class="skill-tag">Communication</span><span class="skill-tag">Adaptability</span><span class="skill-tag">Time Management</span><span class="skill-tag">Attention to Detail</span><span class="skill-tag">Hard Worker</span><span class="skill-tag">Problem Solving</span><span class="skill-tag">Responsibility</span><span class="skill-tag">Accuracy</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 PROJECTS -->
+  <section id="projects">
+    <div class="section-label">// 06</div>
+    <h2 class="section-title">PROJECTS</h2>
+    <div class="grid-3 reveal">
+      <div class="project-card">
+        <div class="project-num">PROJECT_01</div>
+        <div class="project-title">Personal Portfolio Website</div>
+        <div class="project-desc">Created a personal website to display projects and professional information. Used HTML and CSS for page structure, layouts, and responsive design. Added basic JavaScript for interactivity and dynamic content handling.</div>
+        <div class="project-tags">
+          <span class="project-tag">HTML5</span>
+          <span class="project-tag">CSS3</span>
+          <span class="project-tag">JavaScript</span>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">PROJECT_02</div>
+        <div class="project-title">Inventory Management System</div>
+        <div class="project-desc">Built a complete inventory management system using C# connected to a SQL Server database. Implemented full CRUD operations (add, update, delete) for product management with a structured OOP approach.</div>
+        <div class="project-supervisor">▹ Supervised by Dr. Nadine Abdallah</div>
+        <div class="project-tags">
+          <span class="project-tag">C#</span>
+          <span class="project-tag">SQL Server</span>
+          <span class="project-tag">OOP</span>
+          <span class="project-tag">CRUD</span>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">PROJECT_03</div>
+        <div class="project-title">Data Structures Practice</div>
+        <div class="project-desc">Implemented fundamental data structures — lists, stacks, and queues — in C#. Applied them in practical programming exercises to solidify understanding of OOP concepts and algorithm logic design.</div>
+        <div class="project-supervisor">▹ Supervised by Dr. Bilal Awiadat</div>
+        <div class="project-tags">
+          <span class="project-tag">C#</span>
+          <span class="project-tag">Lists</span>
+          <span class="project-tag">Stacks</span>
+          <span class="project-tag">Queues</span>
+          <span class="project-tag">OOP</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 CERTIFICATIONS -->
+  <section id="certifications">
+    <div class="section-label">// 07</div>
+    <h2 class="section-title">CERTIFICATIONS</h2>
+    <div class="reveal">
+      <div class="cert-card">
+        <div class="cert-icon">🛡️</div>
+        <div>
+          <div class="cert-title">Certificate of Attendance &amp; Participation</div>
+          <div class="cert-name">Webinar: Introduction to Ethical Hacking</div>
+          <div class="cert-org">Ming of Ethical Hackers · Semicolon Security &nbsp;|&nbsp; 2023 – 2025</div>
+          <div class="cert-details">Attended a professional webinar focused on ethical hacking fundamentals. Gained introductory knowledge about cybersecurity concepts, ethical hacking methodologies, penetration testing basics, and best practices in information security. This experience reflects a commitment to continuous learning and staying informed about the evolving tech landscape beyond the core curriculum.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 COVER LETTER -->
+  <section id="cover">
+    <div class="section-label">// 08</div>
+    <h2 class="section-title">COVER LETTER</h2>
+    <div class="cover-letter reveal">
+      <p>Dear Hiring Manager,</p>
+      <p>I am <strong style="color:#fff">Lama Shayya</strong>, a motivated Business Computing student at <strong style="color:#fff">Lebanese University (Faculty of Technology, Branch 2 – Abey)</strong>, currently interning as a Web Developer at <strong style="color:#fff">Vanrise Company</strong> in Beirut, Lebanon.</p>
+      <p>I am seeking a software development internship where I can apply my strong analytical mindset and growing expertise in full-stack web development. I possess solid knowledge of frontend technologies including <strong style="color:#fff">HTML5, CSS3, JavaScript, and Bootstrap</strong>, and backend development using <strong style="color:#fff">C# and ASP.NET MVC/Web API</strong>. I am also experienced in designing RESTful APIs, working with SQL Server and MySQL databases, and applying object-oriented programming principles in real-world projects.</p>
+      <p>During my internship at Vanrise Company, I have been actively developing RESTful APIs, designing and optimizing SQL Server databases, building AngularJS components, and resolving front-end performance issues — all within a professional team environment. This role has significantly sharpened my ability to deliver production-ready, business-driven software solutions.</p>
+      <p>In addition to my technical experience, I participated in the <strong style="color:#fff">SHE LEADS</strong> professional development program (2023–2025), which strengthened my communication, teamwork, and professional interaction skills. I also attended a webinar on <strong style="color:#fff">Introduction to Ethical Hacking</strong> by Ming of Ethical Hackers – Semicolon Security, reflecting my commitment to expanding my knowledge beyond the academic curriculum.</p>
+      <p>I am a proactive, detail-oriented, and hardworking individual who thrives in collaborative environments. I am eager to bring my full-stack skills, business-computing perspective, and dedication to your team and contribute to real-world software solutions.</p>
+      <p>Thank you for your time and consideration. I look forward to the opportunity to discuss how I can contribute to your organization.</p>
+      <div class="sig">
+        Sincerely,<br>
+        <strong>Lama Shayya</strong><br>
+        shla35358@gmail.com &nbsp;·&nbsp; +961 81831308<br>
+        linkedin.com/in/lama-shayya-7587b83a0
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>LAMA SHAYYA &nbsp;·&nbsp; <span>Full-Stack Developer</span> &nbsp;·&nbsp; Sawfar, Lebanon &nbsp;·&nbsp; 2026</p>
+  <br>
+  <p>shla35358@gmail.com &nbsp;|&nbsp; +961 81831308 &nbsp;|&nbsp; <a href="https://www.linkedin.com/in/lama-shayya-7587b83a0" target="_blank">LinkedIn Profile</a></p>
+</footer>
+
+<script>
+// MATRIX RAIN
+const canvas = document.getElementById('matrix-canvas');
+const ctx = canvas.getContext('2d');
+const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF<>{}[]|/\\';
+let drops = [];
+const fontSize = 14;
+let cols;
+function initMatrix() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  cols = Math.floor(canvas.width / fontSize);
+  drops = Array(cols).fill(1);
+}
+function drawMatrix() {
+  ctx.fillStyle = 'rgba(13,31,16,0.04)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.font = fontSize + 'px Share Tech Mono, monospace';
+  for (let i = 0; i < drops.length; i++) {
+    const ch = chars[Math.floor(Math.random() * chars.length)];
+    const r = Math.random();
+    ctx.fillStyle = r > 0.97 ? '#ffffff' : r > 0.5 ? '#00ff41' : '#005522';
+    ctx.fillText(ch, i * fontSize, drops[i] * fontSize);
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+    drops[i]++;
+  }
+}
+initMatrix();
+setInterval(drawMatrix, 38);
+window.addEventListener('resize', initMatrix);
+
+// NAV
+const menuBtn = document.getElementById('menu-btn');
+const navDrawer = document.getElementById('nav-drawer');
+const navOverlay = document.getElementById('nav-overlay');
+menuBtn.addEventListener('click', () => { navDrawer.classList.toggle('open'); navOverlay.classList.toggle('open'); });
+navOverlay.addEventListener('click', () => { navDrawer.classList.remove('open'); navOverlay.classList.remove('open'); });
+navDrawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { navDrawer.classList.remove('open'); navOverlay.classList.remove('open'); }));
+
+// SEARCH
+const searchBtn = document.getElementById('search-btn');
+const searchBar = document.getElementById('search-bar');
+const searchInput = document.getElementById('search-input');
+searchBtn.addEventListener('click', () => { searchBar.classList.toggle('open'); if (searchBar.classList.contains('open')) searchInput.focus(); });
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase();
+  if (!q) return;
+  const ids = ['about','cv','cover','experience','education','skills','projects','certifications'];
+  for (const id of ids) {
+    if (id.includes(q) || document.getElementById(id)?.innerText.toLowerCase().includes(q)) {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); break;
+    }
+  }
+});
+
+// REVEAL
+const io = new IntersectionObserver(e => e.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); }), { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// SMOOTH SCROLL
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => { e.preventDefault(); const t = document.querySelector(a.getAttribute('href')); if (t) t.scrollIntoView({ behavior: 'smooth' }); });
+});
+</script>
+</body>
+</html>
