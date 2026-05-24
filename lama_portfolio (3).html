@@ -146,6 +146,81 @@
 
   body::after { content:''; position:fixed; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.025) 2px,rgba(0,0,0,.025) 4px); pointer-events:none; z-index:999; }
 
+  /* INTERVIEW SECTION */
+  .interview-placeholder {
+    background: var(--card-bg); border: 1px dashed rgba(0,255,65,.3);
+    padding: 4rem 2rem; text-align: center; position: relative; overflow: hidden;
+  }
+  .interview-placeholder::before {
+    content: ''; position: absolute; inset: 0;
+    background: repeating-linear-gradient(45deg, transparent, transparent 12px, rgba(0,255,65,.02) 12px, rgba(0,255,65,.02) 24px);
+  }
+  .interview-icon { font-size: 3.5rem; margin-bottom: 1.2rem; filter: grayscale(1) brightness(0.6); }
+  .interview-placeholder h3 { font-family:'Orbitron',sans-serif; font-size: 1.1rem; color: rgba(255,255,255,.4); letter-spacing:.15em; margin-bottom:.7rem; }
+  .interview-placeholder p { font-family:'Share Tech Mono',monospace; font-size:.8rem; color: rgba(0,255,65,.35); letter-spacing:.1em; }
+  .interview-blink { display:inline-block; animation: blink .9s step-end infinite; color:var(--green); opacity:.5; }
+
+  /* PRESENTATION SECTION */
+  .slide-viewer { position: relative; }
+  .slide-nav-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1.5rem; padding: .6rem 1rem;
+    background: rgba(0,255,65,.04); border: 1px solid var(--border);
+  }
+  .slide-nav-bar .slide-counter { font-family:'Share Tech Mono',monospace; font-size:.78rem; color:var(--green); letter-spacing:.12em; }
+  .slide-nav-btns { display:flex; gap:.6rem; }
+  .slide-btn {
+    background: none; border: 1px solid rgba(0,255,65,.35); color:var(--green);
+    font-family:'Share Tech Mono',monospace; font-size:.75rem; padding:.3rem .9rem;
+    cursor:pointer; letter-spacing:.1em; transition: background .2s, color .2s;
+  }
+  .slide-btn:hover { background: rgba(0,255,65,.12); color:#fff; }
+  .slide-btn:disabled { opacity:.25; cursor:default; }
+  .slide-dots { display:flex; gap:.4rem; flex-wrap:wrap; }
+  .slide-dot {
+    width:8px; height:8px; border-radius:50%; background: rgba(0,255,65,.2);
+    border: 1px solid rgba(0,255,65,.35); cursor:pointer; transition: background .2s;
+  }
+  .slide-dot.active { background: var(--green); box-shadow: 0 0 8px var(--green); }
+
+  .slide-display { background: var(--card-bg); border: 1px solid var(--border); padding: 2.5rem; min-height: 320px; position: relative; transition: border-color .3s; }
+  .slide-display:hover { border-color: rgba(0,255,65,.6); }
+  .slide-num-tag { font-family:'Share Tech Mono',monospace; font-size:.68rem; color:var(--muted); letter-spacing:.2em; margin-bottom:.8rem; }
+  .slide-title-display { font-family:'Orbitron',sans-serif; font-size:clamp(.95rem,2.2vw,1.4rem); font-weight:700; color:#fff; margin-bottom:1.4rem; line-height:1.3; }
+  .slide-title-display .slide-sub { font-family:'Rajdhani',sans-serif; font-size:.95rem; font-weight:400; color:var(--muted); display:block; margin-top:.3rem; font-family:'Share Tech Mono',monospace; }
+  .slide-content-area { font-size:.98rem; color:var(--text); line-height:1.8; }
+  .slide-content-area .slide-item { display:flex; gap:.9rem; margin-bottom:.9rem; align-items:flex-start; }
+  .slide-content-area .slide-item-icon { color:var(--green); font-size:.75rem; margin-top:.38rem; flex-shrink:0; font-family:'Share Tech Mono',monospace; }
+  .slide-content-area .slide-item-text strong { color:#fff; display:block; margin-bottom:.15rem; font-size:1rem; }
+  .slide-content-area .slide-item-text span { color:var(--text); font-size:.93rem; }
+  .slide-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:1rem; margin-top:.5rem; }
+  .slide-box { background: rgba(0,255,65,.04); border:1px solid rgba(0,255,65,.18); padding:.9rem 1.1rem; }
+  .slide-box strong { color:var(--green); font-family:'Share Tech Mono',monospace; font-size:.75rem; letter-spacing:.1em; display:block; margin-bottom:.35rem; }
+  .slide-box span { font-size:.9rem; color:var(--text); line-height:1.6; }
+  .timeline-row { display:flex; flex-wrap:wrap; gap:.7rem; margin-top:.5rem; }
+  .tl-chip { background: rgba(0,255,65,.06); border:1px solid rgba(0,255,65,.25); padding:.5rem .9rem; flex:1; min-width:120px; }
+  .tl-chip .tl-year { font-family:'Share Tech Mono',monospace; font-size:.7rem; color:var(--green); margin-bottom:.2rem; }
+  .tl-chip .tl-event { font-size:.85rem; color:#fff; font-weight:700; margin-bottom:.15rem; }
+  .tl-chip .tl-desc { font-size:.78rem; color:var(--muted); line-height:1.4; }
+  .table-slide { width:100%; border-collapse:collapse; margin-top:.5rem; }
+  .table-slide th { font-family:'Share Tech Mono',monospace; font-size:.72rem; color:var(--green); letter-spacing:.1em; padding:.6rem .9rem; border-bottom:1px solid var(--border); text-align:left; }
+  .table-slide td { padding:.55rem .9rem; border-bottom:1px solid rgba(0,255,65,.08); font-size:.88rem; color:var(--text); vertical-align:top; }
+  .table-slide tr:hover td { background: rgba(0,255,65,.03); }
+  .table-slide td:first-child { color:#fff; font-weight:700; white-space:nowrap; }
+  .quote-slide { border-left:3px solid var(--green); padding:.8rem 1.2rem; background:rgba(0,255,65,.03); font-style:italic; color:#c0e8c8; font-size:1.05rem; line-height:1.7; margin-bottom:1.2rem; }
+  .takeaway-list { list-style:none; }
+  .takeaway-list li { padding:.6rem 0 .6rem 1.6rem; position:relative; font-size:1rem; color:var(--text); border-bottom:1px solid rgba(0,255,65,.07); }
+  .takeaway-list li::before { content:'✦'; position:absolute; left:0; color:var(--green); font-size:.7rem; top:.75rem; }
+  .ref-list { list-style:none; font-size:.78rem; color:var(--muted); font-family:'Share Tech Mono',monospace; }
+  .ref-list li { padding:.35rem 0; border-bottom:1px solid rgba(0,255,65,.06); line-height:1.5; }
+  .ref-list a { color:rgba(0,255,65,.6); text-decoration:none; }
+  .slide-fade { animation: slideFadeIn .35s ease; }
+  @keyframes slideFadeIn { from{opacity:0;transform:translateX(12px)} to{opacity:1;transform:none} }
+  .benefit-row { display:flex; flex-wrap:wrap; gap:.7rem; }
+  .benefit-chip { background:rgba(0,255,65,.05); border:1px solid rgba(0,255,65,.2); padding:.6rem 1rem; font-size:.9rem; color:var(--text); display:flex; align-items:center; gap:.6rem; flex:1; min-width:220px; }
+  .benefit-chip::before { content:'▹'; color:var(--green); flex-shrink:0; }
+  .stat-highlight { display:inline-block; font-family:'Orbitron',sans-serif; font-size:2rem; color:var(--green); font-weight:900; text-shadow:0 0 20px rgba(0,255,65,.4); margin:.5rem 0; }
+
   footer { position:relative; z-index:1; text-align:center; padding:3rem 2rem; border-top:1px solid var(--border); font-family:'Share Tech Mono',monospace; font-size:.78rem; color:var(--muted); letter-spacing:.1em; }
   footer span { color:var(--green); }
   footer a { color:var(--green); text-decoration:none; }
@@ -171,12 +246,14 @@
 <nav id="nav-drawer">
   <a href="#about">// 01 — ABOUT</a>
   <a href="#cv">// 02 — CV</a>
-  <a href="#experience">// 03 — EXPERIENCE</a>
-  <a href="#education">// 04 — EDUCATION</a>
-  <a href="#skills">// 05 — SKILLS</a>
-  <a href="#projects">// 06 — PROJECTS</a>
-  <a href="#certifications">// 07 — CERTIFICATIONS</a>
-  <a href="#cover">// 08 — COVER LETTER</a>
+  <a href="#cover">// 03 — COVER LETTER</a>
+  <a href="#experience">// 04 — EXPERIENCE</a>
+  <a href="#education">// 05 — EDUCATION</a>
+  <a href="#skills">// 06 — SKILLS</a>
+  <a href="#projects">// 07 — PROJECTS</a>
+  <a href="#certifications">// 08 — CERTIFICATIONS</a>
+  <a href="#interview">// 09 — INTERVIEW</a>
+  <a href="#presentation">// 10 — PRESENTATION</a>
 </nav>
 
 <div id="search-bar">
@@ -338,9 +415,30 @@
     </div>
   </section>
 
-  <!-- 03 EXPERIENCE -->
-  <section id="experience">
+  <!-- 03 COVER LETTER -->
+  <section id="cover">
     <div class="section-label">// 03</div>
+    <h2 class="section-title">COVER LETTER</h2>
+    <div class="cover-letter reveal">
+      <p>Dear Hiring Manager,</p>
+      <p>I am <strong style="color:#fff">Lama Shayya</strong>, a motivated Business Computing student at <strong style="color:#fff">Lebanese University (Faculty of Technology, Branch 2 – Abey)</strong>, currently interning as a Web Developer at <strong style="color:#fff">Vanrise Company</strong> in Beirut, Lebanon.</p>
+      <p>I am seeking a software development internship where I can apply my strong analytical mindset and growing expertise in full-stack web development. I possess solid knowledge of frontend technologies including <strong style="color:#fff">HTML5, CSS3, JavaScript, and Bootstrap</strong>, and backend development using <strong style="color:#fff">C# and ASP.NET MVC/Web API</strong>. I am also experienced in designing RESTful APIs, working with SQL Server and MySQL databases, and applying object-oriented programming principles in real-world projects.</p>
+      <p>During my internship at Vanrise Company, I have been actively developing RESTful APIs, designing and optimizing SQL Server databases, building AngularJS components, and resolving front-end performance issues — all within a professional team environment. This role has significantly sharpened my ability to deliver production-ready, business-driven software solutions.</p>
+      <p>In addition to my technical experience, I participated in the <strong style="color:#fff">SHE LEADS</strong> professional development program (2023–2025), which strengthened my communication, teamwork, and professional interaction skills. I also attended a webinar on <strong style="color:#fff">Introduction to Ethical Hacking</strong> by Ming of Ethical Hackers – Semicolon Security, reflecting my commitment to expanding my knowledge beyond the academic curriculum.</p>
+      <p>I am a proactive, detail-oriented, and hardworking individual who thrives in collaborative environments. I am eager to bring my full-stack skills, business-computing perspective, and dedication to your team and contribute to real-world software solutions.</p>
+      <p>Thank you for your time and consideration. I look forward to the opportunity to discuss how I can contribute to your organization.</p>
+      <div class="sig">
+        Sincerely,<br>
+        <strong>Lama Shayya</strong><br>
+        shla35358@gmail.com &nbsp;·&nbsp; +961 81831308<br>
+        linkedin.com/in/lama-shayya-7587b83a0
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 EXPERIENCE -->
+  <section id="experience">
+    <div class="section-label">// 04</div>
     <h2 class="section-title">WORK EXPERIENCE</h2>
     <div class="timeline reveal">
       <div class="tl-item">
@@ -380,7 +478,7 @@
 
   <!-- 05 EDUCATION -->
   <section id="education">
-    <div class="section-label">// 04</div>
+    <div class="section-label">// 05</div>
     <h2 class="section-title">EDUCATION</h2>
     <div class="timeline reveal">
       <div class="tl-item">
@@ -408,7 +506,7 @@
 
   <!-- 06 SKILLS -->
   <section id="skills">
-    <div class="section-label">// 05</div>
+    <div class="section-label">// 06</div>
     <h2 class="section-title">SKILLS</h2>
     <div class="grid-4 reveal">
       <div class="skill-card">
@@ -436,7 +534,7 @@
 
   <!-- 07 PROJECTS -->
   <section id="projects">
-    <div class="section-label">// 06</div>
+    <div class="section-label">// 07</div>
     <h2 class="section-title">PROJECTS</h2>
     <div class="grid-3 reveal">
       <div class="project-card">
@@ -479,7 +577,7 @@
 
   <!-- 08 CERTIFICATIONS -->
   <section id="certifications">
-    <div class="section-label">// 07</div>
+    <div class="section-label">// 08</div>
     <h2 class="section-title">CERTIFICATIONS</h2>
     <div class="reveal">
       <div class="cert-card">
@@ -494,24 +592,36 @@
     </div>
   </section>
 
-  <!-- 08 COVER LETTER -->
-  <section id="cover">
-    <div class="section-label">// 08</div>
-    <h2 class="section-title">COVER LETTER</h2>
-    <div class="cover-letter reveal">
-      <p>Dear Hiring Manager,</p>
-      <p>I am <strong style="color:#fff">Lama Shayya</strong>, a motivated Business Computing student at <strong style="color:#fff">Lebanese University (Faculty of Technology, Branch 2 – Abey)</strong>, currently interning as a Web Developer at <strong style="color:#fff">Vanrise Company</strong> in Beirut, Lebanon.</p>
-      <p>I am seeking a software development internship where I can apply my strong analytical mindset and growing expertise in full-stack web development. I possess solid knowledge of frontend technologies including <strong style="color:#fff">HTML5, CSS3, JavaScript, and Bootstrap</strong>, and backend development using <strong style="color:#fff">C# and ASP.NET MVC/Web API</strong>. I am also experienced in designing RESTful APIs, working with SQL Server and MySQL databases, and applying object-oriented programming principles in real-world projects.</p>
-      <p>During my internship at Vanrise Company, I have been actively developing RESTful APIs, designing and optimizing SQL Server databases, building AngularJS components, and resolving front-end performance issues — all within a professional team environment. This role has significantly sharpened my ability to deliver production-ready, business-driven software solutions.</p>
-      <p>In addition to my technical experience, I participated in the <strong style="color:#fff">SHE LEADS</strong> professional development program (2023–2025), which strengthened my communication, teamwork, and professional interaction skills. I also attended a webinar on <strong style="color:#fff">Introduction to Ethical Hacking</strong> by Ming of Ethical Hackers – Semicolon Security, reflecting my commitment to expanding my knowledge beyond the academic curriculum.</p>
-      <p>I am a proactive, detail-oriented, and hardworking individual who thrives in collaborative environments. I am eager to bring my full-stack skills, business-computing perspective, and dedication to your team and contribute to real-world software solutions.</p>
-      <p>Thank you for your time and consideration. I look forward to the opportunity to discuss how I can contribute to your organization.</p>
-      <div class="sig">
-        Sincerely,<br>
-        <strong>Lama Shayya</strong><br>
-        shla35358@gmail.com &nbsp;·&nbsp; +961 81831308<br>
-        linkedin.com/in/lama-shayya-7587b83a0
+  <!-- 09 INTERVIEW -->
+  <section id="interview">
+    <div class="section-label">// 09</div>
+    <h2 class="section-title">INTERVIEW</h2>
+    <div class="reveal">
+      <div class="interview-placeholder">
+        <div class="interview-icon">🎤</div>
+        <h3>AWAITING_INPUT<span class="interview-blink">_</span></h3>
+        <p>// This section will be populated with interview questions &amp; answers</p>
+        <br>
+        <p style="color:rgba(0,255,65,.2);font-family:'Share Tech Mono',monospace;font-size:.72rem;letter-spacing:.08em;">[ SECTION RESERVED — CONTENT COMING SOON ]</p>
       </div>
+    </div>
+  </section>
+
+  <!-- 10 PRESENTATION -->
+  <section id="presentation">
+    <div class="section-label">// 10</div>
+    <h2 class="section-title">PRESENTATION</h2>
+    <p style="font-family:'Share Tech Mono',monospace;font-size:.8rem;color:var(--muted);margin-bottom:2rem;letter-spacing:.08em;">// AI in Business Computing — 12-Slide Academic Deck &nbsp;·&nbsp; Business Computer Department, 2026</p>
+    <div class="slide-viewer reveal">
+      <div class="slide-nav-bar">
+        <div class="slide-counter"><span id="slide-cur">01</span> / <span id="slide-tot">12</span></div>
+        <div class="slide-dots" id="slide-dots"></div>
+        <div class="slide-nav-btns">
+          <button class="slide-btn" id="prev-btn" disabled>◂ PREV</button>
+          <button class="slide-btn" id="next-btn">NEXT ▸</button>
+        </div>
+      </div>
+      <div class="slide-display" id="slide-display"></div>
     </div>
   </section>
 
@@ -524,7 +634,212 @@
 </footer>
 
 <script>
-// MATRIX RAIN
+
+// PRESENTATION SLIDES
+const slides = [
+  {
+    num: '01',
+    title: 'Artificial Intelligence in Business Computing',
+    sub: 'How AI is Transforming the Future of Business Technology',
+    render: () => `
+      <div class="quote-slide">"Artificial Intelligence is not the future — it is the present shaping every industry, workflow, and decision in modern business."</div>
+      <div class="slide-grid">
+        <div class="slide-box"><strong>DEPARTMENT</strong><span>Business Computer Department</span></div>
+        <div class="slide-box"><strong>YEAR</strong><span>2026</span></div>
+        <div class="slide-box"><strong>SCOPE</strong><span>AI's role across all business computing domains</span></div>
+        <div class="slide-box"><strong>PRESENTER</strong><span>Lama Shayya</span></div>
+      </div>`
+  },
+  {
+    num: '02',
+    title: 'What is Artificial Intelligence?',
+    sub: '',
+    render: () => `
+      <div class="quote-slide">"The simulation of human intelligence by computer systems — enabling machines to learn, reason, and solve problems."</div>
+      <div class="slide-grid">
+        <div class="slide-box"><strong>MACHINE LEARNING</strong><span>Systems that learn from data and improve over time without explicit programming.</span></div>
+        <div class="slide-box"><strong>NATURAL LANGUAGE PROCESSING</strong><span>Enables computers to understand, interpret, and generate human language.</span></div>
+        <div class="slide-box"><strong>COMPUTER VISION</strong><span>Allows machines to interpret and make decisions based on visual information.</span></div>
+        <div class="slide-box"><strong>ROBOTICS & AUTOMATION</strong><span>AI-powered physical systems that perform tasks autonomously.</span></div>
+      </div>`
+  },
+  {
+    num: '03',
+    title: 'A Brief History of AI',
+    sub: '',
+    render: () => `
+      <div class="timeline-row">
+        <div class="tl-chip"><div class="tl-year">1950</div><div class="tl-event">Turing Test</div><div class="tl-desc">Alan Turing proposes a test for machine intelligence</div></div>
+        <div class="tl-chip"><div class="tl-year">1956</div><div class="tl-event">AI Born</div><div class="tl-desc">Term 'Artificial Intelligence' coined at Dartmouth Conference</div></div>
+        <div class="tl-chip"><div class="tl-year">1997</div><div class="tl-event">Deep Blue</div><div class="tl-desc">IBM's Deep Blue defeats world chess champion Kasparov</div></div>
+        <div class="tl-chip"><div class="tl-year">2012</div><div class="tl-event">Deep Learning</div><div class="tl-desc">AlexNet wins ImageNet, sparking the deep learning era</div></div>
+        <div class="tl-chip"><div class="tl-year">2017</div><div class="tl-event">Transformers</div><div class="tl-desc">Google introduces the Transformer architecture</div></div>
+        <div class="tl-chip"><div class="tl-year">2023</div><div class="tl-event">Generative AI</div><div class="tl-desc">ChatGPT & GPT-4 reach mainstream business adoption</div></div>
+      </div>`
+  },
+  {
+    num: '04',
+    title: 'AI in Business',
+    sub: 'Key industry applications',
+    render: () => `
+      <div class="slide-grid">
+        <div class="slide-box"><strong>FINANCE</strong><span>Fraud detection, algorithmic trading, credit scoring</span></div>
+        <div class="slide-box"><strong>HR & TALENT</strong><span>Resume screening, employee analytics, onboarding automation</span></div>
+        <div class="slide-box"><strong>SUPPLY CHAIN</strong><span>Demand forecasting, inventory optimization, logistics</span></div>
+        <div class="slide-box"><strong>CUSTOMER SERVICE</strong><span>AI chatbots, sentiment analysis, personalization</span></div>
+        <div class="slide-box"><strong>MARKETING</strong><span>Targeted ads, customer segmentation, content generation</span></div>
+      </div>`
+  },
+  {
+    num: '05',
+    title: 'AI & The Business Computer Field',
+    sub: 'Key intersections between AI and our major',
+    render: () => `
+      <div class="slide-content-area">
+        <div class="slide-item"><div class="slide-item-icon">▹</div><div class="slide-item-text"><strong>Database & ERP Systems</strong><span>AI enhances ERP platforms like SAP & Oracle with intelligent querying, auto-reporting, and predictive analytics integrated into business workflows.</span></div></div>
+        <div class="slide-item"><div class="slide-item-icon">▹</div><div class="slide-item-text"><strong>Business Intelligence & Analytics</strong><span>AI-powered BI tools (Power BI, Tableau) extract insights from massive datasets, enabling data-driven decision-making across departments.</span></div></div>
+        <div class="slide-item"><div class="slide-item-icon">▹</div><div class="slide-item-text"><strong>Information Systems Design</strong><span>AI automates system testing, generates code suggestions, and optimizes database queries — reducing development time significantly.</span></div></div>
+      </div>`
+  },
+  {
+    num: '06',
+    title: 'Popular AI Tools in Business Computing',
+    sub: '',
+    render: () => `
+      <table class="table-slide">
+        <thead><tr><th>TOOL</th><th>CATEGORY</th><th>BUSINESS USE</th></tr></thead>
+        <tbody>
+          <tr><td>ChatGPT / GPT-4</td><td>Generative AI</td><td>Report writing, email drafting, coding assistance, customer support automation</td></tr>
+          <tr><td>Microsoft Copilot</td><td>Productivity AI</td><td>Integrated into Excel, Word, Teams — automates tasks, summarizes meetings</td></tr>
+          <tr><td>Tableau + AI</td><td>Business Intelligence</td><td>Natural language data queries, auto-generated insights and dashboards</td></tr>
+          <tr><td>Salesforce Einstein</td><td>CRM AI</td><td>Sales forecasting, lead scoring, AI-driven customer relationship management</td></tr>
+          <tr><td>SAP AI Core</td><td>ERP AI</td><td>Intelligent automation in supply chain, finance, and HR workflows</td></tr>
+        </tbody>
+      </table>`
+  },
+  {
+    num: '07',
+    title: 'Benefits of AI in Business',
+    sub: 'Average business improvement with AI adoption',
+    render: () => `
+      <div class="benefit-row">
+        <div class="benefit-chip">Automates repetitive tasks, freeing staff for strategic work</div>
+        <div class="benefit-chip">Real-time data insights for faster, smarter decisions</div>
+        <div class="benefit-chip">Reduces operational costs through process optimization</div>
+        <div class="benefit-chip">Scales business operations without proportional cost increase</div>
+      </div>`
+  },
+  {
+    num: '08',
+    title: 'Challenges & Ethical Concerns',
+    sub: '',
+    render: () => `
+      <div class="slide-content-area">
+        <div class="slide-item"><div class="slide-item-icon">⚠</div><div class="slide-item-text"><strong>Data Privacy & Security</strong><span>AI systems require vast amounts of data, raising concerns about user privacy, data breaches, and compliance with regulations like GDPR.</span></div></div>
+        <div class="slide-item"><div class="slide-item-icon">⚠</div><div class="slide-item-text"><strong>Job Displacement</strong><span>Automation threatens routine jobs. Business professionals must adapt by developing AI-complementary skills like critical thinking and creativity.</span></div></div>
+        <div class="slide-item"><div class="slide-item-icon">⚠</div><div class="slide-item-text"><strong>Lack of Transparency</strong><span>'Black box' AI decisions are hard to explain or audit. Businesses must ensure accountability and explainability in AI-driven processes.</span></div></div>
+      </div>`
+  },
+  {
+    num: '09',
+    title: 'The Future of AI in Business Computing',
+    sub: 'Emerging trends shaping the next decade',
+    render: () => `
+      <div class="slide-grid">
+        <div class="slide-box"><strong>01 · AGENTIC AI SYSTEMS</strong><span>AI agents that autonomously complete multi-step business tasks — from research to executing transactions — with minimal human oversight.</span></div>
+        <div class="slide-box"><strong>02 · AI-AUGMENTED WORKFORCE</strong><span>Rather than replacing humans, AI will become a co-worker — handling data-heavy tasks while humans focus on judgment and relationships.</span></div>
+        <div class="slide-box"><strong>03 · HYPER-PERSONALIZATION</strong><span>Businesses will deliver real-time personalized experiences to every customer using AI that adapts dynamically to individual behavior.</span></div>
+        <div class="slide-box"><strong>04 · QUANTUM AI</strong><span>Quantum computing will supercharge AI capabilities, solving optimization problems in logistics, finance, and drug discovery at unprecedented speed.</span></div>
+      </div>`
+  },
+  {
+    num: '10',
+    title: 'Key Takeaways',
+    sub: '',
+    render: () => `
+      <ul class="takeaway-list">
+        <li>AI is fundamentally reshaping every aspect of modern business operations</li>
+        <li>Business Computer professionals must master AI tools to stay competitive</li>
+        <li>Ethical, transparent, and responsible AI adoption is a business imperative</li>
+        <li>The future belongs to humans and AI working together intelligently</li>
+      </ul>`
+  },
+  {
+    num: '11',
+    title: 'References',
+    sub: 'Academic & Industry Sources',
+    render: () => `
+      <ul class="ref-list">
+        <li>Russell, S., & Norvig, P. (2020). <em>Artificial intelligence: A modern approach</em> (4th ed.). Pearson.</li>
+        <li>Turing, A. M. (1950). Computing machinery and intelligence. <em>Mind, 59</em>(236), 433–460. <a href="https://doi.org/10.2307/2251299" target="_blank">doi.org/10.2307/2251299</a></li>
+        <li>IBM. (1997). Deep Blue: Challenging the world champion chess player. <a href="https://www.ibm.com/history/deep-blue" target="_blank">ibm.com/history/deep-blue</a></li>
+        <li>McKinsey & Company. (2023). <em>The economic potential of generative AI.</em> McKinsey Global Institute. <a href="https://www.mckinsey.com" target="_blank">mckinsey.com</a></li>
+        <li>OpenAI. (2023). GPT-4 technical report. arXiv. <a href="https://arxiv.org/abs/2303.08774" target="_blank">arxiv.org/abs/2303.08774</a></li>
+        <li>Vaswani et al. (2017). Attention is all you need. <em>NeurIPS 30.</em> <a href="https://arxiv.org/abs/1706.03762" target="_blank">arxiv.org/abs/1706.03762</a></li>
+        <li>World Economic Forum. (2023). <em>The future of jobs report 2023.</em> <a href="https://www.weforum.org" target="_blank">weforum.org</a></li>
+        <li>Microsoft. (2023). Introducing Microsoft 365 Copilot. <a href="https://blogs.microsoft.com" target="_blank">blogs.microsoft.com</a></li>
+        <li>Salesforce. (2023). Salesforce Einstein AI: Generative AI for CRM. <a href="https://www.salesforce.com/products/einstein/" target="_blank">salesforce.com</a></li>
+        <li>SAP SE. (2023). SAP AI Core. <a href="https://www.sap.com/products/artificial-intelligence/ai-core.html" target="_blank">sap.com</a></li>
+      </ul>`
+  },
+  {
+    num: '12',
+    title: 'Thank You',
+    sub: 'Lama Shayya · Business Computer Department · 2026',
+    render: () => `
+      <div style="text-align:center;padding:1.5rem 0;">
+        <div class="stat-highlight">AI</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--muted);margin-top:.5rem;letter-spacing:.12em;">+ BUSINESS COMPUTING</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--green);margin-top:.3rem;letter-spacing:.12em;">= THE FUTURE</div>
+        <div style="margin-top:2rem;font-size:.95rem;color:var(--text);">Thank you for your attention.</div>
+        <div style="margin-top:.5rem;font-family:'Share Tech Mono',monospace;font-size:.78rem;color:var(--muted);">Questions are welcome.</div>
+      </div>`
+  }
+];
+
+let currentSlide = 0;
+
+function renderSlide(idx) {
+  const s = slides[idx];
+  const display = document.getElementById('slide-display');
+  display.innerHTML = `
+    <div class="slide-num-tag">SLIDE_${s.num} / ${String(slides.length).padStart(2,'0')}</div>
+    <div class="slide-title-display">${s.title}${s.sub ? `<span class="slide-sub">${s.sub}</span>` : ''}</div>
+    <div class="slide-content-area slide-fade">${s.render()}</div>
+  `;
+  document.getElementById('slide-cur').textContent = s.num;
+  document.getElementById('prev-btn').disabled = idx === 0;
+  document.getElementById('next-btn').disabled = idx === slides.length - 1;
+  document.querySelectorAll('.slide-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+}
+
+function initSlideViewer() {
+  const dots = document.getElementById('slide-dots');
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'slide-dot' + (i === 0 ? ' active' : '');
+    d.title = `Slide ${i + 1}`;
+    d.addEventListener('click', () => { currentSlide = i; renderSlide(i); });
+    dots.appendChild(d);
+  });
+  document.getElementById('slide-tot').textContent = String(slides.length).padStart(2,'0');
+  document.getElementById('prev-btn').addEventListener('click', () => { if (currentSlide > 0) { currentSlide--; renderSlide(currentSlide); } });
+  document.getElementById('next-btn').addEventListener('click', () => { if (currentSlide < slides.length - 1) { currentSlide++; renderSlide(currentSlide); } });
+  renderSlide(0);
+}
+
+// Keyboard navigation for slides
+document.addEventListener('keydown', e => {
+  const viewer = document.getElementById('presentation');
+  if (!viewer) return;
+  if (e.key === 'ArrowRight' && currentSlide < slides.length - 1) { currentSlide++; renderSlide(currentSlide); }
+  if (e.key === 'ArrowLeft' && currentSlide > 0) { currentSlide--; renderSlide(currentSlide); }
+});
+
+initSlideViewer();
+
+// Update search IDs
+
 const canvas = document.getElementById('matrix-canvas');
 const ctx = canvas.getContext('2d');
 const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF<>{}[]|/\\';
@@ -570,7 +885,7 @@ searchBtn.addEventListener('click', () => { searchBar.classList.toggle('open'); 
 searchInput.addEventListener('input', () => {
   const q = searchInput.value.toLowerCase();
   if (!q) return;
-  const ids = ['about','cv','cover','experience','education','skills','projects','certifications'];
+  const ids = ['about','cv','cover','experience','education','skills','projects','certifications','interview','presentation'];
   for (const id of ids) {
     if (id.includes(q) || document.getElementById(id)?.innerText.toLowerCase().includes(q)) {
       document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); break;
